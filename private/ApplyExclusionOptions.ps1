@@ -16,10 +16,15 @@ function ApplyExclusionOptions {
         $option.Excludes.Keys | ForEach-Object {
             $key = $_
             $adf.AllObjects() | ForEach-Object {
-                [AdfObject] $o = $_
-                $nonDeployable = $o.IsNameMatch($key)
-                if ($nonDeployable) { $o.ToBeDeployed = $false }
-                #Write-Verbose "- $($o.FullName($true)).ToBeDeployed = $($o.ToBeDeployed)"
+                Try {
+                    [AdfObject] $o = $_
+                    $nonDeployable = $o.IsNameMatch($key)
+                    if ($nonDeployable) { $o.ToBeDeployed = $false }
+                    #Write-Verbose "- $($o.FullName($true)).ToBeDeployed = $($o.ToBeDeployed)"
+                }
+                Catch {
+                    #Ignore
+                }
             }
         }
     }
